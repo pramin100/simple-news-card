@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #1a6fad;
+  --primary-dark: #0e4f82;
+  --primary-light: #e8f3fb;
+  --accent-orange: #ff6b00;
+  --border-color: #c5dff0;
+  --bg-app: #eef5fb;
+  --text-main: #0e2a42;
+  --text-muted: #5a7a96;
+}
+
+body {
+  background-color: var(--bg-app);
+  color: var(--text-main);
+}
+
+/* Custom modern scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(26, 111, 173, 0.05);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(26, 111, 173, 0.25);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(26, 111, 173, 0.45);
+}
+
+/* Range input styling matching reference */
+input[type="range"] {
+  accent-color: #1a6fad;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #1a6fad;
+  box-shadow: 0 2px 6px rgba(10, 50, 90, 0.35);
+  cursor: pointer;
+  border: 2.5px solid #fff;
+  transition: transform 0.1s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+/* Custom color picker buttons */
+input[type="color"] {
+  -webkit-appearance: none;
+  border: none;
+  padding: 0;
+}
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+input[type="color"]::-webkit-color-swatch {
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+}

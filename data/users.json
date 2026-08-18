@@ -1,0 +1,13 @@
+{
+  "users": [
+    {
+      "id": "u_a5fcf006-f815-465e-ae04-face18b20888",
+      "username": "admin",
+      "fullName": "Administrator",
+      "salt": "61d3033b47222b83edf8275bcea710f0",
+      "passwordHash": "28a27ede1b433613bc90960959436d5de072f188a3076f8511a1df77e2cdf825cc15fac925fcd672d2fb153e11a5bd70a63f7b4eaac52db845f92563009719a5",
+      "role": "admin",
+      "createdAt": "2026-08-17T05:47:49.867Z"
+    }
+  ]
+}
