@@ -21,6 +21,7 @@ export interface CardState {
   leadText: string;
   leadFontSize: number;
   leadColor: string;
+  leadAlign?: "left" | "justify" | "center" | "right";
 
   // Issue / Category Tag
   showIssue: boolean;
@@ -135,6 +136,7 @@ export const DEFAULT_CARD_STATE: CardState = {
   leadText: "सामाजिक सञ्जालका लागि आकर्षक र व्यावसायिक समाचार कार्ड केही सेकेन्डमै बनाउनुहोस्।",
   leadFontSize: 24,
   leadColor: "#334155",
+  leadAlign: "justify",
 
   showIssue: true,
   issueText: "ताजा अपडेट",
@@ -633,29 +635,103 @@ export async function renderNewsCardToCanvas(
   // 7. Draw Lead / Summary
   if (state.showLead && state.leadText.trim()) {
     currentY += 12;
-    ctx.font = `500 ${state.leadFontSize}px 'Noto Sans Devanagari', sans-serif`;
-    ctx.fillStyle = state.leadColor;
+    const leadAlign = state.leadAlign || "justify";
+    const leadFontSize = state.leadFontSize || 24;
+    const leadLineH = Math.round(leadFontSize * 1.45);
+    const maxLeadWidth = width - paddingX * 2;
+    const startX = paddingX;
 
-    const leadLines = wrapTextWithHighlights(
-      ctx,
-      state.leadText,
-      width - paddingX * 2,
-      "Noto Sans Devanagari",
-      state.leadFontSize,
-      "500"
-    );
+    ctx.font = `500 ${leadFontSize}px 'Noto Sans Devanagari', sans-serif`;
+    const spaceWidth = ctx.measureText(" ").width;
 
-    const leadLineH = Math.round(state.leadFontSize * 1.45);
-    for (const lLine of leadLines) {
-      let lX = paddingX;
-      if (state.headlineAlign === "center") {
-        lX = paddingX + (width - paddingX * 2 - lLine.totalWidth) / 2;
+    const rawParagraphs = state.leadText.split("\n");
+
+    for (const para of rawParagraphs) {
+      if (!para.trim()) continue;
+
+      const rawWords = para.split(/\s+/).filter(Boolean);
+      const lines: { text: string; isHighlight: boolean; width: number }[][] = [];
+      let currentLine: { text: string; isHighlight: boolean; width: number }[] = [];
+      let currentLineWidth = 0;
+
+      for (let i = 0; i < rawWords.length; i++) {
+        const rawWord = rawWords[i];
+        const isHl = rawWord.startsWith("*") && rawWord.includes("*", 1);
+        const cleanWord = isHl ? rawWord.replace(/\*/g, "") : rawWord;
+        const wordW = ctx.measureText(cleanWord).width;
+
+        const neededWidth = currentLine.length === 0 ? wordW : currentLineWidth + spaceWidth + wordW;
+
+        if (neededWidth > maxLeadWidth && currentLine.length > 0) {
+          lines.push(currentLine);
+          currentLine = [{ text: cleanWord, isHighlight: isHl, width: wordW }];
+          currentLineWidth = wordW;
+        } else {
+          currentLine.push({ text: cleanWord, isHighlight: isHl, width: wordW });
+          currentLineWidth = neededWidth;
+        }
       }
-      for (const seg of lLine.segments) {
-        ctx.fillText(seg.text, lX, currentY);
-        lX += ctx.measureText(seg.text).width;
+
+      if (currentLine.length > 0) {
+        lines.push(currentLine);
       }
-      currentY += leadLineH;
+
+      // Draw lines for this paragraph
+      for (let lIdx = 0; lIdx < lines.length; lIdx++) {
+        const lineWords = lines[lIdx];
+        const isLastLine = lIdx === lines.length - 1;
+        const totalWordsW = lineWords.reduce((sum, w) => sum + w.width, 0);
+
+        if (leadAlign === "center") {
+          const totalLineW = totalWordsW + (lineWords.length - 1) * spaceWidth;
+          let drawX = startX + (maxLeadWidth - totalLineW) / 2;
+          for (const w of lineWords) {
+            ctx.fillStyle = w.isHighlight ? state.headlineHighlightColor : state.leadColor;
+            ctx.fillText(w.text, drawX, currentY);
+            drawX += w.width + spaceWidth;
+          }
+        } else if (leadAlign === "right") {
+          const totalLineW = totalWordsW + (lineWords.length - 1) * spaceWidth;
+          let drawX = startX + (maxLeadWidth - totalLineW);
+          for (const w of lineWords) {
+            ctx.fillStyle = w.isHighlight ? state.headlineHighlightColor : state.leadColor;
+            ctx.fillText(w.text, drawX, currentY);
+            drawX += w.width + spaceWidth;
+          }
+        } else if (leadAlign === "justify" && !isLastLine && lineWords.length > 1) {
+          const extraSpace = maxLeadWidth - totalWordsW;
+          const justifySpace = extraSpace / (lineWords.length - 1);
+
+          // If the line is distributed reasonably (spacing within 4.5x normal space), justify it
+          if (justifySpace > 0 && justifySpace <= spaceWidth * 4.5) {
+            let drawX = startX;
+            for (let wIdx = 0; wIdx < lineWords.length; wIdx++) {
+              const w = lineWords[wIdx];
+              ctx.fillStyle = w.isHighlight ? state.headlineHighlightColor : state.leadColor;
+              ctx.fillText(w.text, drawX, currentY);
+              drawX += w.width + justifySpace;
+            }
+          } else {
+            // Fallback to regular spacing
+            let drawX = startX;
+            for (const w of lineWords) {
+              ctx.fillStyle = w.isHighlight ? state.headlineHighlightColor : state.leadColor;
+              ctx.fillText(w.text, drawX, currentY);
+              drawX += w.width + spaceWidth;
+            }
+          }
+        } else {
+          // Left align (default, and for last line of paragraph in justified mode)
+          let drawX = startX;
+          for (const w of lineWords) {
+            ctx.fillStyle = w.isHighlight ? state.headlineHighlightColor : state.leadColor;
+            ctx.fillText(w.text, drawX, currentY);
+            drawX += w.width + spaceWidth;
+          }
+        }
+
+        currentY += leadLineH;
+      }
     }
   }
 

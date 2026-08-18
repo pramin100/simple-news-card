@@ -32,6 +32,10 @@ import {
   FileText,
   X,
   Square,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  AlignJustify,
 } from "lucide-react";
 import { CardState } from "@/lib/canvasRenderer";
 import { NEPALI_DATE_FORMAT_OPTIONS, adToBs, formatNepaliDate } from "@/lib/nepaliDate";
@@ -644,29 +648,87 @@ export default function SidebarControls({
               placeholder="समाचारको संक्षिप्त विवरण यहाँ लेख्नुहोस् (२-३ लाइन)..."
               className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-500/20"
             />
-            <div className="grid grid-cols-2 gap-3 items-center">
-              <div className="space-y-1">
-                <div className="flex items-center justify-between text-[11px] text-slate-500">
-                  <span>साइज</span>
-                  <span className="font-bold">{state.leadFontSize}px</span>
+            {/* Alignment and Font Size / Color */}
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between">
+                <label className="text-[11px] font-semibold text-slate-600">पङ्क्तिबद्धता (Text Alignment):</label>
+                <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+                  <button
+                    type="button"
+                    onClick={() => onChange({ leadAlign: "justify" })}
+                    title="दुवैतर्फ मिलाउने (Justify)"
+                    className={`p-1.5 rounded-md transition-all flex items-center gap-1 text-[11px] ${
+                      (state.leadAlign || "justify") === "justify"
+                        ? "bg-brand-900 text-white font-bold shadow-sm"
+                        : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    <AlignJustify className="w-3.5 h-3.5" />
+                    <span className="text-[10px] hidden sm:inline">Justify</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onChange({ leadAlign: "left" })}
+                    title="बायाँ (Left Align)"
+                    className={`p-1.5 rounded-md transition-all ${
+                      state.leadAlign === "left"
+                        ? "bg-brand-900 text-white font-bold shadow-sm"
+                        : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    <AlignLeft className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onChange({ leadAlign: "center" })}
+                    title="बीचमा (Center Align)"
+                    className={`p-1.5 rounded-md transition-all ${
+                      state.leadAlign === "center"
+                        ? "bg-brand-900 text-white font-bold shadow-sm"
+                        : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    <AlignCenter className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onChange({ leadAlign: "right" })}
+                    title="दायाँ (Right Align)"
+                    className={`p-1.5 rounded-md transition-all ${
+                      state.leadAlign === "right"
+                        ? "bg-brand-900 text-white font-bold shadow-sm"
+                        : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    <AlignRight className="w-3.5 h-3.5" />
+                  </button>
                 </div>
-                <input
-                  type="range"
-                  min={18}
-                  max={42}
-                  value={state.leadFontSize}
-                  onChange={(e) => onChange({ leadFontSize: parseInt(e.target.value) })}
-                  className="w-full h-1 bg-slate-200 rounded cursor-pointer"
-                />
               </div>
-              <div className="flex items-center justify-end gap-2">
-                <span className="text-[11px] text-slate-500">रंग:</span>
-                <input
-                  type="color"
-                  value={state.leadColor}
-                  onChange={(e) => onChange({ leadColor: e.target.value })}
-                  className="w-7 h-7 rounded-lg cursor-pointer"
-                />
+
+              <div className="grid grid-cols-2 gap-3 items-center pt-1">
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between text-[11px] text-slate-500">
+                    <span>साइज</span>
+                    <span className="font-bold">{state.leadFontSize}px</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={18}
+                    max={42}
+                    value={state.leadFontSize}
+                    onChange={(e) => onChange({ leadFontSize: parseInt(e.target.value) })}
+                    className="w-full h-1 bg-slate-200 rounded cursor-pointer"
+                  />
+                </div>
+                <div className="flex items-center justify-end gap-2">
+                  <span className="text-[11px] text-slate-500">रंग:</span>
+                  <input
+                    type="color"
+                    value={state.leadColor}
+                    onChange={(e) => onChange({ leadColor: e.target.value })}
+                    className="w-7 h-7 rounded-lg cursor-pointer"
+                  />
+                </div>
               </div>
             </div>
           </>

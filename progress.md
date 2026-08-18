@@ -37,8 +37,9 @@
   - Updated `components/CanvasPreview.tsx`: Added `ResizeObserver`, increased vertical height allowance (`- 130px`), added `flex-shrink-0`, `minWidth`, and `minHeight` to the canvas wrapper div, and enabled `overflow-auto` on `<main>`.
   - Updated `lib/canvasRenderer.ts`: Enhanced CTA rendering by measuring and drawing the right website branding pill first, adding collision prevention for long left slogans, and ensuring crisp icon rendering.
   - Made the news card border crisp rectangle with non-rounded (straight 90-degree) corners in `components/CanvasPreview.tsx` (`rounded-none`).
-  - Set **`www.manavaawaj.com`** as the permanent default website URL in `DEFAULT_CARD_STATE` (`lib/canvasRenderer.ts`) and across `components/SidebarControls.tsx` (input fallback & placeholder).
-  - Verified across 4:5 Portrait, 1:1 Square, 16:9 Link, and 9:16 Story aspect ratios via live browser testing.
+  - Added **Justified Text Alignment (पङ्क्तिबद्धता: Justify)** as well as Left, Center, and Right alignment options for the Lead content/summary text in `lib/canvasRenderer.ts` and `components/SidebarControls.tsx`.
+  - Set **`"justify"`** as default so that news summary paragraphs stretch cleanly from margin to margin like printed newspapers and digital news cards.
+  - Verified across 4:5 Portrait, 1:1 Square, 16:9 Link, and 9:16 Story aspect ratios.
 
 ## Test Results
 | Test | Input | Expected | Actual | Status |
@@ -60,6 +61,7 @@
 | Accurate Nepali Date | Default load on page | Exact BS Date `२०८३ भदौ २, मंगलबार` calculated via `nepali-date-converter` | 100% accurate official Bikram Sambat date rendered | Pass |
 | Remove Default Login Accounts | Login page check | Default credentials box removed from login page | Clean, secure login form rendered | Pass |
 | Default Website URL | Card Studio load | Default website URL is `www.manavaawaj.com` | `www.manavaawaj.com` rendered on card and sidebar | Pass |
+| Lead Content Justification | Section 2 alignment selector | Justify, Left, Center, Right align lead text on canvas | Fully justified newspaper-style layout with paragraph awareness | Pass |
 
 ## Error Log
 | Timestamp | Error | Attempt | Resolution |
