@@ -8,6 +8,15 @@
       "passwordHash": "28a27ede1b433613bc90960959436d5de072f188a3076f8511a1df77e2cdf825cc15fac925fcd672d2fb153e11a5bd70a63f7b4eaac52db845f92563009719a5",
       "role": "admin",
       "createdAt": "2026-08-17T05:47:49.867Z"
+    },
+    {
+      "id": "u_cd5c7d8a-d9a0-4ada-8f13-358228b83d92",
+      "username": "ramesh",
+      "fullName": "Ramesh Timilsina",
+      "salt": "cceaf60d75297be35a84445e47727422",
+      "passwordHash": "638f61bbb279651c03831014c056ab50746c49b13bebe19b741bf5ba116eb27b56881c13f16386e158375abcf1f4b44e0f5689215d88a57d03591f1fce7d836c",
+      "role": "editor",
+      "createdAt": "2026-08-18T10:28:47.967Z"
     }
   ]
 }
